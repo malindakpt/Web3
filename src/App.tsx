@@ -2,7 +2,7 @@ import './App.css';
 import Web3 from 'web3';
 import TruffleContract from 'truffle-contract';
 import { useEffect } from 'react';
-import todoListJson from '../src/TodoList.json';
+import todoListJson from './contracts/TodoList.json';
 
 function App() {
   const win: any =  window;
