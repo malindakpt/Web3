@@ -58,7 +58,7 @@ function App() {
   }
 
   const printResults = async () => {
-    const task = await todoList.tasks(0);
+    const task = await todoList.tasks(2);
     console.log(task);
   }
 
