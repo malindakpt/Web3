@@ -4,93 +4,80 @@ import TruffleContract from 'truffle-contract';
 import { useEffect } from 'react';
 import todoListJson from './contracts/TodoList.json';
 
-function App() {
-  const win: any =  window;
-  let account;
-  const contracts: any = {};
-  let todoList: any;
+let TodoList: any;
+let deployedTodoList: any;
+const win: any = window;
+let web3: any;
 
-  
-  let web3 = new Web3(Web3.givenProvider || "ws://localhost:8546");
-  let web3Provider: any;
+function App() {
+  // const [deployedTodoList, setDeployedTodoList] = useState<any>();
+  // const [todoList, setTodoList] = useState<any>();
 
   const loadWeb3 = async () => {
-    if (typeof web3 !== 'undefined') {
-      web3Provider = web3.currentProvider;
-      // web3 = new Web3(web3.currentProvider)
-    } else {
-      window.alert("Please connect to Metamask.")
-    }
-
-    if (win.ethereum) {
-      win.web3 = new Web3(win.ethereum)
-      try {
-        // Request account access if needed
-        await win.ethereum.enable()
-        // Acccounts now exposed
-        // web3.eth.sendTransaction({/* ... */})
-      } catch (error) {
-        console.log('err', error)
-        // User denied account access...
-      }
-    } else {
-      console.log('Non-Ethereum browser detected. You should consider trying MetaMask!')
-    }
+    web3 = new Web3(Web3.givenProvider || "ws://localhost:8546");
+    // await web3.ethereum.enable()
   }
+ 
 
   const loadAccount = async () => {
-    account = await web3.eth.getAccounts();
-    console.log('Acc', account);
+    const accounts = await web3.eth.getAccounts();
+    const acc= accounts[0];
+    web3.eth.defaultAccount = acc;
+    console.log('Acc', acc);
   }
-
 
   const loadContract = async () => {
     // Create a JavaScript version of the smart contract
     // let todoList = await $.getJSON('TodoList.json')
-    contracts.TodoList = TruffleContract(todoListJson)
-    contracts.TodoList.setProvider(web3Provider)
+    // const contTodo = TruffleContract(todoListJson);
+    // contTodo.setProvider(Web3.givenProvider)
+
+    
+
+     TodoList = TruffleContract(todoListJson)
+     TodoList.setProvider(Web3.givenProvider)
 
     // Hydrate the smart contract with values from the blockchain
-    todoList = await contracts.TodoList.deployed();
-    console.log('todos', todoList);
+     deployedTodoList = await TodoList.deployed();
+ 
+   
+    
+    // console.log('todos', deployedTodoList);
+  }
 
-
+  const addTask = async () => {
+    await deployedTodoList.createTask('New from FE');
   }
 
   const printResults = async () => {
-    const task = await todoList.tasks(2);
-    console.log(task);
+    const task = await deployedTodoList.tasks(2);
+    const taskCount: BigInt =  await deployedTodoList.taskCount();
+    // await TodoList.createTask('New from FE');
+    console.log('Task', task);
+    console.log('Count:',taskCount.toString());
   }
-
-  
- 
 
   const init = async () => {
     await loadWeb3();
     await loadAccount();
     await loadContract();
-    await printResults();
+    // await printResults();
   }
-
 
   useEffect(() => {
     init();
   }, []);
+
   
-  
-
-
-
-
-
-
-
-
-
 
   return (
     <div className="App">
       <h3>Web3 App</h3>
+      <div>
+        {/* Task Count: {taskCount.toNumber()} */}
+      </div>
+      <button onClick={printResults}>Print</button>
+      <button onClick={addTask}>Add Task</button>
     </div>
   );
 }
