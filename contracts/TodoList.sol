@@ -13,7 +13,7 @@ contract TodoList {
         createTask("Start");
         createTask("This is first task Malinda 1 Updates");
         createTask("This is first task Malinda 2");
-         createTask("End");
+        createTask("End");
     }
 
     mapping(uint => Task) public tasks;
@@ -21,6 +21,10 @@ contract TodoList {
     function createTask(string memory _content) public {
         taskCount ++;
         tasks[taskCount] = Task(taskCount, _content, true);
+    }
+
+    function createTask2() public {
+        tasks[taskCount + 1] = Task(taskCount, 'TTTT Test', true);
     }
 
 }

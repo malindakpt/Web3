@@ -49,6 +49,10 @@ function App() {
     await deployedTodoList.createTask('New from FE');
   }
 
+  const addTask2 = async () => {
+    await deployedTodoList.createTask2();
+  }
+
   const printResults = async () => {
     const task = await deployedTodoList.tasks(2);
     const taskCount: BigInt =  await deployedTodoList.taskCount();
@@ -61,7 +65,7 @@ function App() {
     await loadWeb3();
     await loadAccount();
     await loadContract();
-    // await printResults();
+    await printResults();
   }
 
   useEffect(() => {
@@ -78,6 +82,7 @@ function App() {
       </div>
       <button onClick={printResults}>Print</button>
       <button onClick={addTask}>Add Task</button>
+      <button onClick={addTask2}>Add Task 2</button>
     </div>
   );
 }
