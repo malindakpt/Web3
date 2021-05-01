@@ -1,5 +1,6 @@
+import {AbiItem} from 'web3-utils'
 export const contractAddress = '0x936Dc62aC27Da08D3EAca56995Dcd43705CF6238';
-export const contractAbi = [
+export const contractAbi: AbiItem[] = [
     {
       "inputs": [
         {
