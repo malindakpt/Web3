@@ -11,7 +11,7 @@ function App() {
   const [count, setCount] = useState(0);
   
   const loadWeb3 = async () => { 
-    const web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
+    const web3 = new Web3(Web3.givenProvider || 'HTTP://127.0.0.1:7545');
  
     contract = new web3.eth.Contract(contractAbi, contractAddress);
   }
