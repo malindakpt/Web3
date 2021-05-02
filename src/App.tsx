@@ -4,16 +4,20 @@ import { Contract } from 'web3-eth-contract'
 import { useCallback, useEffect, useState } from 'react';
 import { contractAbi, contractAddress } from './ABI';
 
+let web3: Web3;
 let contract: Contract;
 
 function App() {
 
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(1);
   
   const loadWeb3 = async () => { 
-    const web3 = new Web3(Web3.givenProvider || 'HTTP://127.0.0.1:7545');
+    web3 = new Web3(Web3.givenProvider || 'HTTP://127.0.0.1:7545');
  
     contract = new web3.eth.Contract(contractAbi, contractAddress);
+
+    const blockNumber = await web3.eth.getBlockNumber();
+    console.log('Block No',blockNumber);
   }
 
   const readData = async () => {
@@ -26,8 +30,9 @@ function App() {
   }
 
   const writeData = async () => {
-    try{      
-      await contract.methods.store(count).send({from :'0x38b84f33B8646305473FdCe422ef6Bb53D9350af'});
+    try{   
+      const accounts =  await web3.eth.getAccounts();  
+      await contract.methods.store(count).send({from : accounts[0]});
       console.log('Wrote', count);
       setCount(count+1);
     } catch(e){
